@@ -1,8 +1,17 @@
 const express = require("express");
+const nodemailer = require("nodemailer");
 const app = express();
 app.use(express.json());
 
 const VERIFY_TOKEN = "my_secret_token";
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "nicolasleandrorochamercado@gmail.com",
+    pass: "hshc ofvo evpq cdru",  // paste your app password here
+  },
+});
 
 // Meta calls this once to verify your webhook
 app.get("/webhook", (req, res) => {
@@ -19,10 +28,39 @@ app.get("/webhook", (req, res) => {
 });
 
 // Meta sends WhatsApp messages here
-app.post("/webhook", (req, res) => {
-  const body = req.body;
-  console.log("Incoming message:", JSON.stringify(body, null, 2));
+app.post("/webhook", async (req, res) => {
   res.sendStatus(200);
+
+  try {
+    const entry = req.body?.entry?.[0];
+    const changes = entry?.changes?.[0];
+    const value = changes?.value;
+
+    // Only process incoming messages, ignore status updates
+    if (!value?.messages) return;
+
+    const message = value.messages[0];
+    const from = message.from;
+    const timestamp = new Date(message.timestamp * 1000).toLocaleString("es-BO", { timeZone: "America/La_Paz" });
+
+    let messageText = "";
+    if (message.type === "text") {
+      messageText = message.text.body;
+    } else {
+      messageText = `[${message.type} message — not text]`;
+    }
+
+    await transporter.sendMail({
+      from: "nicolasleandrorochamercado@gmail.com",
+      to: "nicolasleandrorochamercado@gmail.com",
+      subject: `WhatsApp reply from +${from}`,
+      text: `You received a WhatsApp reply:\n\nFrom: +${from}\nTime: ${timestamp}\nMessage: ${messageText}`,
+    });
+
+    console.log(`Email sent for reply from ${from}`);
+  } catch (err) {
+    console.error("Error processing message:", err);
+  }
 });
 
 const PORT = process.env.PORT || 3000;
