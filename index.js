@@ -3,7 +3,7 @@ const nodemailer = require("nodemailer");
 const app = express();
 app.use(express.json());
 
-const VERIFY_TOKEN = "my_secret_token";
+const VERIFY_TOKEN = "VERIFY_TOKEN";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
