@@ -51,11 +51,11 @@ app.post("/webhook", async (req, res) => {
     }
 
     await transporter.sendMail({
-      from: "nicolasleandrorochamercado@gmail.com",
-      to: "nicolasleandrorochamercado@gmail.com",
-      subject: `WhatsApp reply from +${from}`,
-      text: `You received a WhatsApp reply:\n\nFrom: +${from}\nTime: ${timestamp}\nMessage: ${messageText}`,
-    });
+  from: process.env.GMAIL_USER,
+  to: process.env.GMAIL_USER,
+  subject: `WhatsApp reply from +${from}`,
+  text: `You received a WhatsApp reply:\n\nFrom: +${from}\nTime: ${timestamp}\nMessage: ${messageText}`,
+});
 
     console.log(`Email sent for reply from ${from}`);
   } catch (err) {
