@@ -8,8 +8,8 @@ const VERIFY_TOKEN = "my_secret_token";
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "nicolasleandrorochamercado@gmail.com",
-    pass: "hshc ofvo evpq cdru",  // paste your app password here
+    user: "GMAIL_USER",
+    pass: "GMAIL_APP_PASSWORD",  // paste your app password here
   },
 });
 
