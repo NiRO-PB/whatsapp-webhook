@@ -3,13 +3,13 @@ const nodemailer = require("nodemailer");
 const app = express();
 app.use(express.json());
 
-const VERIFY_TOKEN = "VERIFY_TOKEN";
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "GMAIL_USER",
-    pass: "GMAIL_APP_PASSWORD",  // paste your app password here
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD,
   },
 });
 
